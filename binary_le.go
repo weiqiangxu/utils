@@ -7,12 +7,11 @@ import (
 	"math"
 )
 
-// LeEncode encodes one or multiple `values` into bytes using LittleEndian.
-// It uses type asserting checking the type of each value of `values` and internally
-// calls corresponding converting function do the bytes converting.
-//
-// It supports common variable type asserting, and finally it uses fmt.Sprintf converting
-// value to string and then to bytes.
+// LeEncode使用LittleEndian将一个或多个“值”编码为字节
+// 它使用类型断言来检查“values”的每个值的类型，并在内部
+// 调用相应的转换函数进行字节转换
+// 它支持公共变量类型断言，最后使用fmt。Sprintf转换
+// 值转换为字符串，然后转换为字节。
 func LeEncode(values ...interface{}) []byte {
 	buf := new(bytes.Buffer)
 	for i := 0; i < len(values); i++ {
@@ -95,7 +94,7 @@ func LeDecodeToString(b []byte) string {
 }
 
 func LeEncodeBool(b bool) []byte {
-	if b == true {
+	if b {
 		return []byte{1}
 	} else {
 		return []byte{0}
@@ -212,7 +211,7 @@ func LeDecodeToBool(b []byte) bool {
 	if len(b) == 0 {
 		return false
 	}
-	if bytes.Compare(b, make([]byte, len(b))) == 0 {
+	if bytes.Equal(b, make([]byte, len(b))) {
 		return false
 	}
 	return true
@@ -264,10 +263,9 @@ func LeDecodeToFloat64(b []byte) float64 {
 	return math.Float64frombits(binary.LittleEndian.Uint64(LeFillUpSize(b, 8)))
 }
 
-// LeFillUpSize fills up the bytes `b` to given length `l` using LittleEndian.
-//
-// Note that it creates a new bytes slice by copying the original one to avoid changing
-// the original parameter bytes.
+//LeFillUpSize使用LittleEndian将字节'b'填充到给定长度'l'
+//请注意，它通过复制原始字节片来创建新的字节片，以避免更改
+//原始参数字节
 func LeFillUpSize(b []byte, l int) []byte {
 	if len(b) >= l {
 		return b[:l]
